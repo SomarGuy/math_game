@@ -1,3 +1,7 @@
+require_relative 'player'
+require_relative 'question'
+require_relative 'game_io'
+
 class Game
   def initialize
     @player1 = Player.new("Player 1")
@@ -10,7 +14,7 @@ class Game
   end
 
   def display_scores
-    puts "P1: #{@player1.lives}/3 vs P2: #{@player2.lives}/3"
+    GameIO.display("P1: #{@player1.lives}/3 vs P2: #{@player2.lives}/3")
   end
 
   def game_over?
@@ -20,27 +24,27 @@ class Game
   def play
     until game_over?
       question = Question.new
-      puts "#{@current_player.name}: #{question}"
+      GameIO.display("#{@current_player.name}: #{question}")
 
-      answer = gets.chomp.to_i
+      answer = GameIO.get_input.to_i
 
       if answer == question.answer
-        puts "#{@current_player.name}: YES! You are correct."
+        GameIO.display("#{@current_player.name}: YES! You are correct.")
       else
-        puts "#{@current_player.name}: Seriously? No!"
+        GameIO.display("#{@current_player.name}: Seriously? No!")
         @current_player.lose_life
       end
 
       unless game_over?
         display_scores
-        puts "----- NEW TURN -----"
+        GameIO.display("----- NEW TURN -----")
         switch_player
       end
     end
 
     winner = @player1.lives.positive? ? @player1 : @player2
-    puts "#{winner.name} wins with a score of #{winner.lives}/3"
-    puts "------ GAME OVER ------"
-    puts "Good bye!"
+    GameIO.display("#{winner.name} wins with a score of #{winner.lives}/3")
+    GameIO.display("------ GAME OVER ------")
+    GameIO.display("Good bye!")
   end
 end
